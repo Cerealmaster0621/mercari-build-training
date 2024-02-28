@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 interface Item {
   id: number;
   name: string;
-  category: string;
+  category_name: string;
   image_name: string;
 };
 
@@ -46,16 +46,21 @@ export const ItemList: React.FC<Prop> = (props) => {
   }, [reload]);
 
   return (
-    <div>
+    <div className='ItemList'>
       {items.map((item) => {
+        const imgUrl = item.image_name ?`${server}/image/${item.image_name}`: placeholderImage;
         return (
-          <div key={item.id} className='ItemList'>
-            {/* TODO: Task 1: Replace the placeholder image with the item image */}
-            <img src={placeholderImage} />
+          <div key={item.id} className="Item">
+            <img 
+              src={imgUrl} 
+              alt={item.name} 
+              onError={(e)=>(e.currentTarget.src = placeholderImage)}
+              className='image'
+            />
             <p>
-              <span>Name: {item.name}</span>
+              <span className='name'>{item.name}</span>
               <br />
-              <span>Category: {item.category}</span>
+              <span className='category'>{item.category_name}</span>
             </p>
           </div>
         )
