@@ -13,10 +13,11 @@ const placeholderImage = process.env.PUBLIC_URL + '/logo192.png';
 interface Prop {
   reload?: boolean;
   onLoadCompleted?: () => void;
+  searchKeyword:string;
 }
 
 export const ItemList: React.FC<Prop> = (props) => {
-  const { reload = true, onLoadCompleted } = props;
+  const { reload = true, onLoadCompleted, searchKeyword } = props;
   const [items, setItems] = useState<Item[]>([])
   const fetchItems = () => {
     fetch(server.concat('/items'),
@@ -38,6 +39,10 @@ export const ItemList: React.FC<Prop> = (props) => {
         console.error('GET error:', error)
       })
   }
+  const filteredItems = items.filter(item =>
+    item.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+    item.category_name.toLowerCase().includes(searchKeyword.toLowerCase())
+  );
 
   useEffect(() => {
     if (reload) {
@@ -47,7 +52,7 @@ export const ItemList: React.FC<Prop> = (props) => {
 
   return (
     <div className='ItemList'>
-      {items.map((item) => {
+      {filteredItems.map((item) => {
         const imgUrl = item.image_name ?`${server}/image/${item.image_name}`: placeholderImage;
         return (
           <div key={item.id} className="Item">
